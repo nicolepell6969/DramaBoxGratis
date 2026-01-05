@@ -40,3 +40,16 @@ Perintah yang tersedia di bot:
 - `/latest` menampilkan daftar drama terbaru dengan tombol untuk membuka detail episode.
 - `/search <judul>` mencari drama berdasarkan kata kunci.
 - `/detail <bookId>` langsung membuka detail dan tautan stream untuk ID tertentu.
+
+## Membuat repository bot Telegram terpisah
+Jika Anda ingin memisahkan bot Telegram ke repo lain, gunakan template yang ada di `templates/telegram-bot`:
+
+```bash
+mkdir ../dramabox-telegram-bot
+cp -r templates/telegram-bot/. ../dramabox-telegram-bot/
+cd ../dramabox-telegram-bot
+npm install
+cp .env.example .env
+```
+
+Isi `.env` sesuai lingkungan Anda, lalu jalankan `npm start` untuk mode polling atau `npm run webhook` jika sudah memiliki URL webhook publik. Template menggunakan endpoint `/api/dramabox/*` dari aplikasi ini sebagai backend.
