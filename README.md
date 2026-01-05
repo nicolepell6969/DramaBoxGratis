@@ -20,17 +20,36 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Telegram bot
 
-To learn more about Next.js, take a look at the following resources:
+Bot webhook tersedia di `/api/telegram` dan memanfaatkan data dramabox yang sama dengan aplikasi web. Siapkan variabel lingkungan berikut sebelum mengaktifkan webhook:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `TELEGRAM_BOT_TOKEN` – token bot dari [@BotFather](https://t.me/BotFather).
+- `TELEGRAM_WEBHOOK_SECRET` – token rahasia opsional untuk memvalidasi header `x-telegram-bot-api-secret-token`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Contoh menghubungkan webhook (ganti `BASE_URL` dengan domain yang bisa diakses Telegram):
 
-## Deploy on Vercel
+```bash
+curl "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook" \
+  -d url="$BASE_URL/api/telegram" \
+  -d secret_token="$TELEGRAM_WEBHOOK_SECRET"
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Perintah yang tersedia di bot:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/latest` menampilkan daftar drama terbaru dengan tombol untuk membuka detail episode.
+- `/search <judul>` mencari drama berdasarkan kata kunci.
+- `/detail <bookId>` langsung membuka detail dan tautan stream untuk ID tertentu.
+
+## Membuat repository bot Telegram terpisah
+Jika Anda ingin memisahkan bot Telegram ke repo lain, gunakan template yang ada di `templates/telegram-bot`:
+
+```bash
+mkdir ../dramabox-telegram-bot
+cp -r templates/telegram-bot/. ../dramabox-telegram-bot/
+cd ../dramabox-telegram-bot
+npm install
+cp .env.example .env
+```
+
+Isi `.env` sesuai lingkungan Anda, lalu jalankan `npm start` untuk mode polling atau `npm run webhook` jika sudah memiliki URL webhook publik. Template menggunakan endpoint `/api/dramabox/*` dari aplikasi ini sebagai backend.
